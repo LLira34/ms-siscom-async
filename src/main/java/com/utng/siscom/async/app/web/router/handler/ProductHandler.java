@@ -69,4 +69,11 @@ public class ProductHandler {
                     .bodyValue(product.getProduct());
             });
     }
+
+    public Mono<ServerResponse> delete(ServerRequest serverRequest) {
+        String id = serverRequest.pathVariable("id");
+        return productService
+            .delete(id)
+            .flatMap(unused -> ServerResponse.noContent().build());
+    }
 }

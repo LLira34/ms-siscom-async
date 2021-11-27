@@ -22,6 +22,7 @@ public class ProductRouterFunction {
         return route(GET("/api/v2/products"), productHandler::findAll)
             .andRoute(GET("/api/v2/products/{id}"), productHandler::findById)
             .andRoute(POST("/api/v2/products"), productHandler::insert)
-            .andRoute(PUT("/api/v2/products/{id}"), productHandler::update);
+            .andRoute(PUT("/api/v2/products/{id}"), productHandler::update)
+            .andRoute(DELETE("/api/v2/products/{id}"), productHandler::delete);
     }
 }

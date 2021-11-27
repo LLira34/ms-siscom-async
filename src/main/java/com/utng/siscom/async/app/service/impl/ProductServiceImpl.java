@@ -87,6 +87,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Mono<Void> delete(String id) {
-        return productRepository.deleteById(id);
+        return productRepository
+            .findById(id)
+            .flatMap(product -> productRepository.delete(product));
     }
 }
