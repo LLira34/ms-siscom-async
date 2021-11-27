@@ -39,15 +39,15 @@ public class MainApplication implements CommandLineRunner {
         reactiveMongoTemplate.dropCollection("categories").subscribe();
 
         Mono.just(new Category("Electronic"))
-                .flatMap(category -> categoryRepository.save(category))
-                .flatMapMany(category -> Flux.just(new Product("TV", 123.0, category.getId()),
-                                new Product("Laptop", 321.0, category.getId()),
-                                new Product("Camara", 1250.00, category.getId()),
-                                new Product("Mobil", 4500.23, category.getId()))
-                        .flatMap(product -> {
-                            product.setCreatedAt(LocalDateTime.now());
-                            return productRepository.insert(product);
-                        }))
-                .subscribe(product -> log.info(product.getId()), throwable -> log.error(throwable.getMessage()));
+            .flatMap(category -> categoryRepository.save(category))
+            .flatMapMany(category -> Flux.just(new Product("TV", 123.0, category.getId()),
+                    new Product("Laptop", 321.0, category.getId()),
+                    new Product("Camara", 1250.00, category.getId()),
+                    new Product("Mobil", 4500.23, category.getId()))
+                .flatMap(product -> {
+                    product.setCreatedAt(LocalDateTime.now());
+                    return productRepository.insert(product);
+                }))
+            .subscribe(product -> log.info(product.getId()), throwable -> log.error(throwable.getMessage()));
     }
 }

@@ -21,36 +21,37 @@ public class ProductRestController {
     @GetMapping("/products")
     public Mono<ResponseEntity<Flux<Product>>> findAll() {
         return Mono
-                .just(ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(productService.findAll()));
+            .just(ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(productService.findAll()));
     }
 
     @GetMapping("/products/{id}")
     public Mono<ResponseEntity<Product>> findById(@PathVariable String id) {
         return productService
-                .findById(id)
-                .map(product -> ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(product))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+            .findById(id)
+            .map(product -> ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(product))
+            .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/products")
     public Mono<ResponseEntity<Product>> insert(@RequestBody Product body) {
         return productService
-                .insert(body)
-                .map(product -> ResponseEntity.created(URI.create("/api/v1/products".concat(product.getId())))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(product));
+            .insert(body)
+            .map(product -> ResponseEntity.created(URI.create("/api/v1/products".concat(product.getId())))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(product));
     }
 
     @PutMapping("/products/{id}")
     public Mono<ResponseEntity<Product>> update(@RequestBody Product body, @PathVariable String id) {
         return productService
-                .update(body, id)
-                .map(product -> ResponseEntity.created(URI.create("/api/v1/products".concat(product.getId())))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(product));
+            .update(body, id)
+            .map(product -> ResponseEntity
+                .created(URI.create("/api/v1/products".concat(product.getProduct().getId())))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(product.getProduct()));
     }
 }

@@ -1,5 +1,6 @@
 package com.utng.siscom.async.app.service;
 
+import com.utng.siscom.async.app.beans.ProductResponseBean;
 import com.utng.siscom.async.app.domain.Product;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -12,7 +13,7 @@ public interface ProductService {
 
     Mono<Product> insert(Product data);
 
-    Mono<Product> update(Product data, String id);
+    Mono<ProductResponseBean> update(Product data, String id);
 
     Mono<Void> delete(String id);
 }
