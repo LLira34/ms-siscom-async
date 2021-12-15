@@ -1,9 +1,11 @@
 package com.utng.siscom.async.app.web.router.handler;
 
+import com.utng.siscom.async.app.common.exceptions.SiscomException;
 import com.utng.siscom.async.app.domain.Product;
 import com.utng.siscom.async.app.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -11,6 +13,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -34,11 +38,16 @@ public class ProductHandler {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(product))
+            .switchIfEmpty(ServerResponse.notFound().build())
             .onErrorResume(throwable -> {
                 log.error(throwable.getMessage());
-                return ServerResponse.notFound().build();
-            })
-            .switchIfEmpty(ServerResponse.notFound().build());
+                if (throwable instanceof SiscomException) {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("error", throwable.getMessage());
+                    return ServerResponse.status(HttpStatus.NOT_FOUND).bodyValue(params);
+                }
+                return Mono.error(throwable);
+            });
     }
 
     public Mono<ServerResponse> insert(ServerRequest serverRequest) {
